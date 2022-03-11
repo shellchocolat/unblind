@@ -1,0 +1,76 @@
+<!-- templates/unblind.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+  <section class="section">
+    <header class="card-header">
+      <div>
+        <label class="label">-- UNBLIND --</label>
+      </div>
+    </header>
+  </section>
+
+  <section class="section has-background-danger-light">
+    <div class="card-content">
+      <div class="px-2" id="tab-content">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-warning">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <div id="unblind">
+
+            {% if xss_results %}
+                XSS
+                <table id="table_xss" class="table is-hoverable is-fullwidth">
+                    <thead class="thead is-primary">
+                        <th>#</th>
+                        <th>Action</th>
+                        <th>Stage 1</th>
+                        <th>Stage 2</th>
+                        <th>Date</th>
+                        <th>Value</th>
+                        <th>IP (from)</th>
+                        <th>Url</th>
+                        <th>Cookie</th>
+                        <th>Uid</th>
+                    </thead>
+                    {% for key, value in xss_results.items() recursive %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>
+                              <div class="control">
+                                <button id={{ value.xss_uid }} class="button is-warning is-rounded" onclick="deleteOnClick(this.id, 'xss')">Delete</button>
+                              </div>
+                            </td>
+                            <td>{{ value.xss_stage_1 }}</td>
+                            <td>{{ value.xss_stage_2 }}</td>
+                            <td>{{ value.xss_created_at }}</td>
+                            <td>{{ value.xss_value }}</td>
+                            <td>{{ value.xss_ip_from }}</td>
+                            <td>{{ value.url }}</td>
+                            <td>{{ value.cookie }}</td>
+                            <td>{{ value.xss_uid }}</td>
+                            
+                        </tr>
+                    {% endfor %}
+                </table>
+            {%endif%}      
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+
+<script src="{{ url_for('static', filename='js/unblind.js') }}"></script>
+
+{% endblock %}
