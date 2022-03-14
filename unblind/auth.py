@@ -26,7 +26,7 @@ def login_post():
         db.session.add(first_user)
         db.session.commit()
         flash('First user created', 'info')
-        return redirect(url_for('auth.unblind'))
+        return redirect(url_for('main.unblind'))
     else:
         if md5_hash != user.user_hash:
             flash('Login error', 'danger')
