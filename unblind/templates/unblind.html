@@ -28,7 +28,8 @@
 
             {% if xss_results %}
                 XSS
-                <table id="table_xss" class="table is-hoverable is-fullwidth">
+                <div class="table-container">
+                  <table id="table_xss" class="table is-hoverable is-bordered is-striped is-fullwidth">
                     <thead class="thead is-primary">
                         <th>#</th>
                         <th>Action</th>
@@ -49,8 +50,12 @@
                                 <button id={{ value.xss_uid }} class="button is-warning is-rounded" onclick="deleteOnClick(this.id, 'xss')">Delete</button>
                               </div>
                             </td>
-                            <td>{{ value.xss_stage_1 }}</td>
-                            <td>{{ value.xss_stage_2 }}</td>
+                            <td class="is-selected">{{ value.xss_stage_1 }}</td>
+                            {% if value.xss_stage_2 == True %}
+                              <td class="is-selected">{{ value.xss_stage_2 }}</td>
+                            {% else %}
+                              <td>{{ value.xss_stage_2 }}</td>
+                            {% endif %}
                             <td>{{ value.xss_created_at }}</td>
                             <td>{{ value.xss_value }}</td>
                             <td>{{ value.xss_ip_from }}</td>
@@ -61,6 +66,7 @@
                         </tr>
                     {% endfor %}
                 </table>
+              </div>
             {%endif%}      
 
         </div>

@@ -1,5 +1,7 @@
 <!-- templates/unblind.html -->
 
+<!-- https://buefy.org/documentation/table/ -->
+
 {% extends "base.html" %}
 
 {% block content %}
@@ -27,7 +29,8 @@
         <div id="unblind">
 
             {% if results %}
-                <table id="table_payloads" class="table is-hoverable is-fullwidth">
+              <div class="table-container">
+                <table id="table_payloads" class="table is-hoverable is-bordered is-striped is-fullwidth">
                     <thead class="thead is-primary">
                         <th>#</th>
                         <th>Payload</th>
@@ -43,6 +46,7 @@
                       {%endfor%}
                     {% endfor %}
                 </table>
+              </div>
             {%endif%}      
 
         </div>
