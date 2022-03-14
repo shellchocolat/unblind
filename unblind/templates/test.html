@@ -1,0 +1,35 @@
+<!-- templates/test.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+  <section class="section">
+    <header class="card-header">
+      <div>
+        <label class="label">-- TEST --</label>
+      </div>
+    </header>
+  </section>
+
+  <section class="section has-background-danger-light">
+    <div class="card-content">
+      <div class="px-2" id="tab-content">
+        <div id="unblind">
+
+          <button class="button">TEST</button>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+
+<script src="{{ url_for('static', filename='js/unblind.js') }}"></script>
+<script>test()</script>
+
+{% endblock %}
