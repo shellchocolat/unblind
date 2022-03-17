@@ -14,6 +14,8 @@ import threading
 from time import sleep
 import urllib
 from urllib import parse
+import random
+import string
 
 
 main = Blueprint('main', __name__)
@@ -33,7 +35,9 @@ def test():
     return render_template('test.html')
 
 def generate_unique():
-    return str(uuid.uuid4())
+    u = string.ascii_lowercase
+    r = ''.join(random.choice(u) for i in range(8))
+    return r
 
 # new xss/xxe found, store it inside the db: stage_1
 @main.route(config["main_endpoint"] + '/<path:xxx>/<path:random_str>', methods=['GET'])
@@ -196,16 +200,16 @@ def payloads_lst():
         try:
             fieldname = request.args["fieldname"]
             encoding = request.args["encoding"]
-            #print(fieldname)
+            if fieldname == "":
+                fieldname = "_"
             unique = fieldname + "-" + generate_unique()
             encoding = request.args["encoding"]
         except:
-            unique = generate_unique()
+            unique = "_-" + generate_unique()
             encoding = "no_encoding"
     else:
-        unique = generate_unique()
+        unique = "_-" + generate_unique()
         encoding = "no_encoding"
-
     
     payloads_lst = config["payloads_lst"]
     current_dir = os.getcwd()
@@ -223,7 +227,7 @@ def payloads_lst():
         i["payload"] = i["payload"].replace("{{IP}}", url)
         i["payload"] = i["payload"].replace("{{PORT}}", port)
         i["payload"] = i["payload"].replace("{{ENDPOINT}}", stage_1_endpoint)
-        i["payload"] = i["payload"].replace("{{UNIQUE_STR}}", unique)
+        i["payload"] = i["payload"].replace("{{UNIQUE_STR}}", i["id"] + "-" + unique)
 
         if encoding == "url_encoding":
             i["payload"] = urllib.parse.quote_plus(i["payload"])

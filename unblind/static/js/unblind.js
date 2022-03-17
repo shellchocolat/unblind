@@ -12,3 +12,8 @@ function deleteOnClick(clicked_id, x_str) {
   else{
   }    
 }
+
+function copy_clipboard(clicked_id) {
+  var copyText = document.getElementById(clicked_id);
+  navigator.clipboard.writeText(copyText.textContent);
+}

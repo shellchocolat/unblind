@@ -12,9 +12,7 @@
         <label class="label">-- UNBLIND --</label>
       </div>
     </header>
-  </section>
 
-  <section class="section has-background-danger-light">
     <div class="card-content">
       <div class="px-2" id="tab-content">
         {% with messages = get_flashed_messages() %}
@@ -27,23 +25,16 @@
         <div id="unblind">
 
             {% if xss_results %}
-                XSS
                 <div class="table-container">
                   <table id="table_xss" class="table is-hoverable is-bordered is-striped is-fullwidth">
-                    <thead class="thead is-primary">
+                      <thead class="thead is-primary">
                         <th>#</th>
                         <th>Action</th>
                         <th>Stage 1</th>
                         <th>Stage 2</th>
-                        <th>Date</th>
-                        <th>Value</th>
-                        <th>IP (from)</th>
-                        <th>Url</th>
-                        <th>Cookie</th>
-                        <th>User-Agent</th>
-                        <th>Uid</th>
-                    </thead>
-                    {% for key, value in xss_results.items() recursive %}
+                        <th>Result</th>
+                      </thead>
+                      {% for key, value in xss_results.items() recursive %}
                         <tr>
                             <td>{{ key }}</td>
                             <td>
@@ -57,16 +48,19 @@
                             {% else %}
                               <td>{{ value.xss_stage_2 }}</td>
                             {% endif %}
-                            <td>{{ value.xss_created_at }}</td>
-                            <td>{{ value.xss_value }}</td>
-                            <td>{{ value.xss_ip_from }}</td>
-                            <td>{{ value.url }}</td>
-                            <td>{{ value.cookie }}</td>
-                            <td>{{ value.user_agent }}</td>
-                            <td>{{ value.xss_uid }}</td>
-                            
+                            <td class="column">
+                              <div>
+                                <div><p><strong>Created at: </strong>{{ value.xss_created_at }}</p></div>
+                                <div><p style="color:red"><strong>Value: </strong>{{ value.xss_value }}</p></div>
+                                <div><p><strong>IP (from): </strong>{{ value.xss_ip_from }}</p></div>
+                                <div><p><strong>Url: </strong>{{ value.url }}</p></div>
+                                <div><p><strong>Cookie: </strong>{{ value.cookie }}</p></div>
+                                <div><p><strong>User-Agent: </strong>{{ value.user_agent }}</p></div>
+                                <div><p><strong>Uid: </strong>{{ value.xss_uid }}</p></div>
+                              </div>
+                            </td>
                         </tr>
-                    {% endfor %}
+                      {% endfor %}
                 </table>
               </div>
             {%endif%}      

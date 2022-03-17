@@ -14,9 +14,7 @@
         <label class="label">-- PAYLOADS --</label>
       </div>
     </header>
-  </section>
 
-  <section class="section has-background-danger-light">
     <div class="card-content">
       <form action="/unblind/payloads">
         <div class="inline fields">
@@ -66,7 +64,7 @@
                       {% for v in value %}
                         <tr>
                           <td>{{ v.id }}</td>
-                          <td>{{ v.payload }}</td>
+                          <td><p id={{ v.id }}>{{ v.payload }}</p><br/><button onclick="copy_clipboard({{ v.id }})" class="button is-warning">Copy</button></td>
                           <td>{{ v.description }}</td>    
                         </tr>
                       {%endfor%}
@@ -81,9 +79,6 @@
   </section>
 </div>
 
-
-
 <script src="{{ url_for('static', filename='js/unblind.js') }}"></script>
-<script>test_stage_2()</script>
 
 {% endblock %}
