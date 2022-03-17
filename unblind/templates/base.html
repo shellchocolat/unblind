@@ -1,7 +1,7 @@
 <!-- templates/base.html -->
 
 <!DOCTYPE html>
-<html>
+<html class="has-background-grey-darker">
 
 <head>
     <meta charset="utf-8">
@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <section class="hero is-light is-small">
+    <section class="hero is-light is-small has-background-black-ter">
 
         <div class="hero-head">
             <nav class="navbar is-warning" role="navigation" aria-label="main navigation">
@@ -23,18 +23,18 @@
               
                     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                             {% if not current_user.is_authenticated %}
-                            <a href="{{ url_for('auth.login') }}" class="navbar-item is-light">
+                            <a href="{{ url_for('auth.login') }}" class="navbar-item is-light has-text-white">
                                 Log in
                             </a>
                             {% endif %}
                             {% if current_user.is_authenticated %}
-                            <a href="{{ url_for('main.unblind') }}" class="navbar-item">
+                            <a href="{{ url_for('main.unblind') }}" class="navbar-item has-text-white">
                                 <strong>Unblind</strong>
                             </a>
-                            <a href="{{ url_for('main.payloads_lst') }}" class="navbar-item">
+                            <a href="{{ url_for('main.payloads_lst') }}" class="navbar-item has-text-white">
                                 <strong>Payloads</strong>
                             </a>
-                            <a href="{{ url_for('auth.logout') }}" class="navbar-item">
+                            <a href="{{ url_for('auth.logout') }}" class="navbar-item has-text-white">
                                 <strong>Logout</strong>
                             </a>
                             {% endif %}
@@ -52,12 +52,10 @@
         </div>
     </section>
     
-    <section class="section">
-        <!--<div class="container">-->
-            {% block content %}
-            {% endblock %}
-        <!--</div>-->
-    </section>
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
     
 </body>
 

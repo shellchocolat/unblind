@@ -6,16 +6,16 @@
 
 {% block content %}
 
-<div class="card">
+<div class="card has-background-grey-darker">
 
   <section class="section">
     <header class="card-header">
       <div>
-        <label class="label">-- PAYLOADS --</label>
+        <label class="label has-text-white">-- PAYLOADS --</label>
       </div>
     </header>
 
-    <div class="card-content">
+    <div class="card-content has-text-white">
       <form action="/unblind/payloads">
         <div class="inline fields">
           <input type="text" name="fieldname" id="fieldname" placeholder="Field Name" autofocus="" value="">
@@ -54,11 +54,11 @@
 
             {% if results %}
               <div class="table-container">
-                <table id="table_payloads" class="table is-hoverable is-bordered is-striped is-fullwidth">
+                <table id="table_payloads" class="table is-bordered is-fullwidth has-background-black-ter has-text-white">
                     <thead class="thead is-primary">
-                        <th>#</th>
-                        <th>Payload</th>
-                        <th>Description</th>
+                        <th class="has-text-warning">#</th>
+                        <th class="has-text-warning">Payload</th>
+                        <th class="has-text-warning">Description</th>
                     </thead>
                     {% for key, value in results.items() recursive %}
                       {% for v in value %}
