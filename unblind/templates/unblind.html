@@ -50,13 +50,16 @@
                             {% endif %}
                             <td class="column">
                               <div>
+                                <div><p><strong class="has-text-warning">Uid: </strong>{{ value.xss_uid }}</p></div>
                                 <div><p><strong class="has-text-warning">Created at: </strong>{{ value.xss_created_at }}</p></div>
                                 <div><p style="color:red"><strong class="has-text-warning">Value: </strong>{{ value.xss_value }}</p></div>
-                                <div><p><strong class="has-text-warning">IP (from): </strong>{{ value.xss_ip_from }}</p></div>
+                                <div><p><strong class="has-text-warning">Ip: </strong>{{ value.xss_ip_from }}</p></div>
                                 <div><p><strong class="has-text-warning">Url: </strong>{{ value.url }}</p></div>
                                 <div><p><strong class="has-text-warning">Cookie: </strong>{{ value.cookie }}</p></div>
                                 <div><p><strong class="has-text-warning">User-Agent: </strong>{{ value.user_agent }}</p></div>
-                                <div><p><strong class="has-text-warning">Uid: </strong>{{ value.xss_uid }}</p></div>
+                                <div><p><strong class="has-text-warning">Platform: </strong>{{ value.platform }}</p></div>
+                                <div><p><strong class="has-text-warning">Screen Resolution: </strong>{{ value.screen_resolution }}</p></div>
+                                <div><p><strong class="has-text-warning">Browser Size: </strong>{{ value.browser_size }}</p></div>
                               </div>
                             </td>
                         </tr>

@@ -117,6 +117,9 @@ def grab_info(xxx_uid):
         url = str(info["url"])
         cookie = str(info["cookie"])
         user_agent = str(info["user_agent"])
+        platform = str(info["platform"])
+        screen_resolution = str(info["screen_resolution"])
+        browser_size = str(info["browser_size"])
     except Exception as e:
         print(str(e))
         print("[-] Error_1 in get_info()")
@@ -125,6 +128,9 @@ def grab_info(xxx_uid):
     try:
         xxx = XSS.query.filter_by(xss_uid=xss_uid).first()
         if xxx:
+            xxx.platform = platform
+            xxx.screen_resolution = screen_resolution
+            xxx.browser_size = browser_size
             xxx.user_agent = user_agent
             xxx.cookie = cookie
             xxx.url = url
@@ -181,6 +187,9 @@ def unblind():
         content["xss_ip_from"] = x.xss_ip_from
         content["cookie"] = x.cookie
         content["user_agent"] = x.user_agent
+        content["platform"] = x.platform
+        content["screen_resolution"] = x.screen_resolution
+        content["browser_size"] = x.browser_size
         content["url"] = x.url
 
         xss_results[c] = content

