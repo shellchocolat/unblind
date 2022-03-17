@@ -18,4 +18,5 @@ class XSS(UserMixin, db.Model):
     xss_stage_1 = db.Column(db.Boolean)
     xss_stage_2 = db.Column(db.Boolean)
     cookie = db.Column(db.String(1000))
+    user_agent = db.Column(db.String(1000))
     url = db.Column(db.String(255))

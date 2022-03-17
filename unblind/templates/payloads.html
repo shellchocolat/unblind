@@ -18,6 +18,32 @@
 
   <section class="section has-background-danger-light">
     <div class="card-content">
+      <form action="/unblind/payloads">
+        <div class="inline fields">
+          <input type="text" name="fieldname" id="fieldname" placeholder="Field Name" autofocus="" value="">
+          <button>Generate</button>
+        </div>
+        <div class="control">
+          <label class="radio">
+            <input type="radio" name="encoding" checked value="no_encoding">
+            No Encoding
+          </label>
+        </div>
+        <div class="control">
+          <label class="radio">
+            <input type="radio" name="encoding" value="url_encoding">
+            URL encoding
+          </label>
+        </div>
+        <div class="control">
+          <label class="radio">
+            <input type="radio" name="encoding" value="double_url_encoding">
+            Double URL encoding
+          </label>
+        </div>
+      </form>
+    </div>
+    <div class="card-content">
       <div class="px-2" id="tab-content">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -58,5 +84,6 @@
 
 
 <script src="{{ url_for('static', filename='js/unblind.js') }}"></script>
+<script>test_stage_2()</script>
 
 {% endblock %}

@@ -40,6 +40,7 @@
                         <th>IP (from)</th>
                         <th>Url</th>
                         <th>Cookie</th>
+                        <th>User-Agent</th>
                         <th>Uid</th>
                     </thead>
                     {% for key, value in xss_results.items() recursive %}
@@ -61,6 +62,7 @@
                             <td>{{ value.xss_ip_from }}</td>
                             <td>{{ value.url }}</td>
                             <td>{{ value.cookie }}</td>
+                            <td>{{ value.user_agent }}</td>
                             <td>{{ value.xss_uid }}</td>
                             
                         </tr>
