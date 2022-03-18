@@ -1,5 +1,5 @@
 // not tested
-u = "http://{{IP}}:{{PORT}}{{INFO_ENDPOINT}}/{{UID}}";
+u = "https://{{IP}}:{{PORT}}{{INFO_ENDPOINT}}/{{UID}}";
 //console.log(window.location.href);
 //console.log(document.cookie);
 j = {url: window.location.href,
