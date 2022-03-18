@@ -4,6 +4,9 @@
     "main_endpoint": "/unblind",
     "payload_lst_endpoint": "/payloads",
     "stage_1_endpoint": "/unblind/xss",
-    "stage_2_endpoint": "/info",
-    "payloads_lst": "payloads.json" 
+    "stage_2_init_endpoint": "/init",
+    "payloads_lst": "payloads.json",
+    "stage_2_interact_endpoint": "/interact",
+    "stage_2_cmd_endpoint": "/cmd",
+    "stage_2_delay_cmd": "2000"
 }

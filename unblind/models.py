@@ -23,3 +23,9 @@ class XSS(UserMixin, db.Model):
     screen_resolution = db.Column(db.String(100))
     browser_size = db.Column(db.String(100))
     url = db.Column(db.String(255))
+
+class Interact(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    agent_uid = db.Column(db.String(100), unique=True)
+    agent_cmd = db.Column(db.String(10000))
+    agent_response = db.Column(db.String(10000))

@@ -33,6 +33,7 @@
                         <th class="has-text-warning">Stage 1</th>
                         <th class="has-text-warning">Stage 2</th>
                         <th class="has-text-warning">Result</th>
+                        <th class="has-text-warning">Interact</th>
                       </thead>
                       {% for key, value in xss_results.items() recursive %}
                         <tr>
@@ -60,6 +61,16 @@
                                 <div><p><strong class="has-text-warning">Platform: </strong>{{ value.platform }}</p></div>
                                 <div><p><strong class="has-text-warning">Screen Resolution: </strong>{{ value.screen_resolution }}</p></div>
                                 <div><p><strong class="has-text-warning">Browser Size: </strong>{{ value.browser_size }}</p></div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="field">
+                                <div class="control">
+                                  <textarea class="textarea" placeholder="Large textarea" id="cmd"></textarea>
+                                </div>
+                                <div class="control">
+                                  <button id={{ value.xss_uid }} class="button" onclick="send_cmd(this.id)">Send</button>
+                                </div>
                               </div>
                             </td>
                         </tr>

