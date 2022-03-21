@@ -3,6 +3,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_cors import CORS, cross_origin
 import json
 import os
 
@@ -24,6 +25,8 @@ def create_app():
 
     app.config['SECRET_KEY'] = 'ddLWGND4om3j4K3i4op1'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///unblind.sqlite'
+    cors = CORS(app)
+    app.config['CORS_HEADERS'] = 'Content-Type'
 
     db.init_app(app)
 
